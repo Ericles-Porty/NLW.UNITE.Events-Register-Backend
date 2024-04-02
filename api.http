@@ -1,0 +1,8 @@
+POST http://localhost:3333/events
+content-type: application/json
+
+{
+    "title": "Role dos amigos",
+    "details": "Vamos jogar um futebolzinho",
+    "maximumAttendees": 100
+}
