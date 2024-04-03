@@ -3,10 +3,10 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import z from "zod";
 import { prisma } from "../../lib/prisma";
 
-export async function checkInEvent(app: FastifyInstance) {
+export async function checkIn(app: FastifyInstance) {
     app
         .withTypeProvider<ZodTypeProvider>()
-        .post("/attendees/:attendeeId/checkin", {
+        .get("/attendees/:attendeeId/check-in", {
             schema: {
                 summary: "Check-in event",
                 tags: ["Check-in"],

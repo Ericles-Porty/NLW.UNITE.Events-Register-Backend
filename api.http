@@ -19,19 +19,15 @@ content-type: application/json
 
 {
     "name": "Fernanda",
-    "email": "Fern@gmail.com"
+    "email": "Fern123@gmail.com"
 }
 
 ###
-GET http://localhost:3333/attendees/6/badge
+GET http://localhost:3333/attendees/9/badge
 
 ###
-POST http://localhost:3333/attendees/6/checkin
-Content-Type: application/json
+GET http://localhost:3333/attendees/9/check-in
 
-{
-    
-}
 
 ###
 GET http://localhost:3333/events/01b8f4e1-6c75-4977-ad63-a4d238c72de0/attendees

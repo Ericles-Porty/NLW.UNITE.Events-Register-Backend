@@ -5,7 +5,7 @@ import { registerForEvent } from "./routes/attendee/register-for-event";
 import { getEvents } from "./routes/events/get-events";
 import { getEvent } from "./routes/events/get-event";
 import { getAttendeeBadge } from "./routes/attendee/get-attendee-badge";
-import { checkInEvent } from "./routes/check-in/check-in-event";
+import { checkIn } from "./routes/check-in/check-in";
 import { fastifySwagger } from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import fastifyCors from "@fastify/cors";
@@ -62,7 +62,7 @@ app.register(registerForEvent);
 app.register(getEventAttendees)
 app.register(getAttendeeBadge);
 
-app.register(checkInEvent);
+app.register(checkIn);
 
 app.listen({ port: 3333 }).then(() => {
     console.log("Server is running on port http://localhost:3333");
