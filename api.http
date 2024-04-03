@@ -6,3 +6,21 @@ content-type: application/json
     "details": "Vamos jogar um futebolzinho",
     "maximumAttendees": 100
 }
+
+###
+GET http://localhost:3333/events
+
+###
+GET http://localhost:3333/events/01b8f4e1-6c75-4977-ad63-a4d238c72de0
+
+###
+POST http://localhost:3333/events/01b8f4e1-6c75-4977-ad63-a4d238c72de0/attendees
+content-type: application/json
+
+{
+    "name": "Eris",
+    "email": "Eris2@gmail.com"
+}
+
+###
+GET http://localhost:3333/attendees/1/badge
