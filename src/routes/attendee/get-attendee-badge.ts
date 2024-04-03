@@ -8,6 +8,8 @@ export async function getAttendeeBadge(app: FastifyInstance) {
         .withTypeProvider<ZodTypeProvider>()
         .get("/attendees/:attendeeId/badge", {
             schema: {
+                summary: "Get attendee badge",
+                tags: ["Attendees"],
                 params: z.object({
                     attendeeId: z.coerce.number().int(),
                 }),
@@ -19,6 +21,7 @@ export async function getAttendeeBadge(app: FastifyInstance) {
                         event: z.object({
                             title: z.string(),
                         }),
+                        checkedIn: z.boolean(),
                     }),
                     404: z.object({
                         error: z.string(),
@@ -38,7 +41,8 @@ export async function getAttendeeBadge(app: FastifyInstance) {
                         select: {
                             title: true
                         }
-                    }
+                    },
+                    checkIn: true
                 },
                 where: {
                     id: attendeeId
@@ -48,7 +52,17 @@ export async function getAttendeeBadge(app: FastifyInstance) {
             if (attendee === null)
                 return reply.status(404).send({ error: "Attendee not found" })
 
-            return reply.status(200).send(attendee)
+            return reply.status(200).send(
+                {
+                    id: attendee.id,
+                    name: attendee.name,
+                    email: attendee.email,
+                    event: {
+                        title: attendee.event.title
+                    },
+                    checkedIn: attendee.checkIn !== null
+                }
+            )
         })
 
 }

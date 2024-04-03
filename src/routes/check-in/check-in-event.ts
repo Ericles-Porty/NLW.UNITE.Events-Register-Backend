@@ -8,8 +8,10 @@ export async function checkInEvent(app: FastifyInstance) {
         .withTypeProvider<ZodTypeProvider>()
         .post("/attendees/:attendeeId/checkin", {
             schema: {
+                summary: "Check-in event",
+                tags: ["Check-in"],
                 params: z.object({
-                    attendeeId: z.coerce.number().int(),
+                    attendeeId: z.coerce.number().int().positive(),
 
                 }),
                 response: {
@@ -18,8 +20,8 @@ export async function checkInEvent(app: FastifyInstance) {
                         attendeeId: z.number().int(),
                         createdAt: z.date(),
                     }),
-                    400: z.object({ error: z.string() }),
                     404: z.object({ error: z.string() }),
+                    409: z.object({ error: z.string() }),
                 },
             }
         },
@@ -31,38 +33,28 @@ export async function checkInEvent(app: FastifyInstance) {
                     where: {
                         id: attendeeId
                     },
-                    select: {
-                        id: true,
-                        CheckIn: true
+                    include: {
+                        checkIn: true
                     }
                 })
 
-                // Check if attendee exists
-                if (!attendee) {
+                if (!attendee)
                     return reply.status(404).send({ error: "Attendee not found" })
-                }
 
-                console.log(attendee)
-                const hasCheckIn = await prisma.checkIn.findFirst({
-                    where: {
-                        attendeeId
-                    }
-                })
+                //  O participante só pode realizar check-in em um evento uma única vez;
+                if (attendee.checkIn)
+                    return reply.status(409).send({ error: "Attendee already checked in" })
 
-                if (hasCheckIn) {
-                    return reply.status(400).send({ error: "Attendee already checked in" })
-                }
-
-                const checkin = await prisma.checkIn.create({
+                const checkIn = await prisma.checkIn.create({
                     data: {
                         attendeeId
                     }
                 })
 
                 return reply.status(201).send({
-                    id: checkin.id,
-                    attendeeId: checkin.attendeeId,
-                    createdAt: checkin.createdAt,
+                    id: checkIn.id,
+                    attendeeId: checkIn.attendeeId,
+                    createdAt: checkIn.createdAt,
                 })
             })
 }
