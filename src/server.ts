@@ -1,4 +1,4 @@
-import { fastify } from "fastify";
+import { FastifyReply, FastifyRequest, fastify } from "fastify";
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import { createEvent } from "./routes/events/create-event";
 import { registerForEvent } from "./routes/attendee/register-for-event";
@@ -53,7 +53,6 @@ app.register(fastifySwaggerUi, {
 })
 
 // Routes
-
 app.register(createEvent);
 app.register(getEvents);
 app.register(getEvent);
@@ -64,6 +63,12 @@ app.register(getAttendeeBadge);
 
 app.register(checkIn);
 
-app.listen({ port: 3333 }).then(() => {
+// Error handling
+app.setErrorHandler((error: Error, request: FastifyRequest, reply: FastifyReply) => {
+    reply.status(500).send({ error: error.message })
+});
+
+// Start server
+app.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
     console.log("Server is running on port http://localhost:3333");
 });
